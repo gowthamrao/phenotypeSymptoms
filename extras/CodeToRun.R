@@ -1,51 +1,41 @@
-Phenotype Library Diagnostics
-=============================
+# *******************************************************
+# -----------------INSTRUCTIONS -------------------------
+# *******************************************************
+#
+# This CodeToRun.R is provided as an example of how to run this study package.
+# 
+# Below you will find 3 sections: the 1st is for installing the study package and its dependencies, 
+# the 2nd for running the package, the 3rd is for sharing the results with the study coordinator.
+#
+# In section 2 below, you will also need to update the code to use your site specific values. Please scroll
+# down for specific instructions.
+#
+# 
+# *******************************************************
+# SECTION 1: Installing 
+# *******************************************************
+# 
+# 1. See the instructions at https://ohdsi.github.io/Hades/rSetup.html for configuring your R environment, including Java and RStudio.
+#
+# 2. In RStudio, create a new project: File -> New Project... -> New Directory -> New Project. If asked if you want to use `renv` with the project, answer ‘no’.
+#
+# 3. Execute the following R code:
 
-<img src="https://img.shields.io/badge/Study%20Status-Results%20Available-yellow.svg" alt="Study Status: Results Available">
-
-- Analytics use case(s): **Characterization**
-- Study type: **Clinical Application**
-- Tags: **-**
-- Study lead: **Gowtham Rao**
-- Study lead forums tag: **[gowtham_rao](https://forums.ohdsi.org/u/gowtham_rao)**
-- Study start date: **October 8, 2020**
-- Study end date: **-**
-- Protocol: **-**
-- Publications: **-**
-- Results explorer: **[Phenotype Library](https://data.ohdsi.org/PhenotypeLibrary/)**
-
-Generating cohort diagnostics for the cohort definitions in the OHDSI Phenotype Library.
-
-# Instructions for installing and running the study package
-
-Below are the instructions for installing and then running the package. For your convience, you can also find this code in [extras/CodeTorun.R](https://github.com/ohdsi-studies/PhenotypeSymptoms/blob/master/extras/CodeToRun.R).
-
-## How to install the study package
-
-There are several ways in which one could install the `PhenotypeSymptoms` package. However, we recommend using the `renv` package:
-
-1. See the instructions [here](https://ohdsi.github.io/Hades/rSetup.html) for configuring your R environment, including Java and RStudio.
-
-2. In RStudio, create a new project: File -> New Project... -> New Directory -> New Project. If asked if you want to use `renv` with the project, answer ‘no’.
-
-3. Execute the following R code:
-
-```r
 # Install the latest version of renv:
 install.packages("renv")
 
 # Download the lock file:
 download.file("https://raw.githubusercontent.com/ohdsi-studies/PhenotypeSymptoms/master/renv.lock", "renv.lock")
-  
+
 # Build the local library. This may take a while:
 renv::init()
-```
 
-## How to run the study package
+# *******************************************************
+# SECTION 2: Running the package -------------------------------------------------------------------------------
+# *******************************************************
+#
+# Edit the variables below to the correct values for your environment:
 
-1. Edit the script below to ensure that the variables contain the correct values for your environment, then execute:
-
-```r
 library(PhenotypeSymptoms)
 
 # Specify where the temporary files will be created:
@@ -118,17 +108,12 @@ runPhenotypeSymptoms(connectionDetails = connectionDetails,
 # (Optionally) to view the results locally:
 CohortDiagnostics::preMergeDiagnosticsFiles(file.path(outputFolder, "diagnosticsExport"))
 CohortDiagnostics::launchDiagnosticsExplorer(file.path(outputFolder, "diagnosticsExport"))
-```
 
-## Sharing the results with the study coordinator
-
-1. Upload results to the OHDSI SFTP server:
-
-```r
-
+# *******************************************************
+# SECTION 3: Sharing the results -------------------------------------------------------------------------------
+# *******************************************************
+#
+# Upload results to the OHDSI SFTP server:
 uploadResults(outputFolder, keyFileName, userName)
-```
 
-# Development status
-
-Ready to run.
+# Please send the study-coordinator an e-mail when done

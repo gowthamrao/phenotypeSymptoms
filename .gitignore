@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.tmp
+.Rprofile
+errorReportSql.txt
+errorReportR.txt
+log.txt
