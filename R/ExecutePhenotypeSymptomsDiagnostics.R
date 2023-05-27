@@ -167,7 +167,7 @@ executePhenotyeLibraryDiagnostics <- function(connectionDetails,
     runBreakdownIndexEvents = TRUE,
     runIncidenceRate = TRUE,
     runCohortRelationship = FALSE,
-    runTemporalCohortCharacterization = FALSE,
+    runTemporalCohortCharacterization = TRUE,
     temporalCovariateSettings = FeatureExtraction::createTemporalCovariateSettings(
       useDemographicsGender = TRUE,
       useDemographicsAge = TRUE,
@@ -175,7 +175,7 @@ executePhenotyeLibraryDiagnostics <- function(connectionDetails,
       useDemographicsRace = FALSE,
       useDemographicsEthnicity = FALSE,
       useDemographicsIndexYear = TRUE,
-      useDemographicsIndexMonth = FALSE,
+      useDemographicsIndexMonth = TRUE,
       useDemographicsIndexYearMonth = TRUE,
       useDemographicsPriorObservationTime = TRUE,
       useDemographicsPostObservationTime = TRUE,
@@ -184,12 +184,12 @@ executePhenotyeLibraryDiagnostics <- function(connectionDetails,
       useProcedureOccurrence = TRUE,
       useDrugEraStart = TRUE,
       useMeasurement = FALSE,
-      useConditionEraStart = FALSE,
-      useConditionEraOverlap = FALSE,
-      useConditionEraGroupStart = FALSE, # do not use because https://github.com/OHDSI/FeatureExtraction/issues/144
-      useConditionEraGroupOverlap = FALSE,
+      useConditionEraStart = TRUE,
+      useConditionEraOverlap = TRUE,
+      useConditionEraGroupStart = TRUE, # do not use because https://github.com/OHDSI/FeatureExtraction/issues/144
+      useConditionEraGroupOverlap = TRUE,
       useDrugExposure = FALSE, # leads to too many concept id
-      useDrugEraOverlap = FALSE,
+      useDrugEraOverlap = TRUE,
       useDrugEraGroupStart = FALSE, # do not use because https://github.com/OHDSI/FeatureExtraction/issues/144
       useDrugEraGroupOverlap = TRUE,
       useObservation = TRUE,
@@ -214,7 +214,8 @@ executePhenotyeLibraryDiagnostics <- function(connectionDetails,
         0, # index date only
         1, # 1 day after to day 30
         31,
-        -9999 # Any time prior to any time future
+        -9999, # Any time prior to any time future
+        -3,-2,-1, 1, 2, 3
       ),
       temporalEndDays = c(
         0, # anytime prior
@@ -228,7 +229,8 @@ executePhenotyeLibraryDiagnostics <- function(connectionDetails,
         0, # index date only
         30, # 1 day after to day 30
         365,
-        9999 # Any time prior to any time future
+        9999, # Any time prior to any time future
+        -2,-1,0, 2,3, 4
       )
     ),
     minCellCount = 5,
