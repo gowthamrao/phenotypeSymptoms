@@ -135,6 +135,10 @@ cohortDefinitionSet <-
   CohortGenerator::addCohortSubsetDefinition(cohortSubsetDefintion = startBeforeCalendarYear2016Female) |>
   CohortGenerator::addCohortSubsetDefinition(cohortSubsetDefintion = startAfterCalendarYear2016Female)
 
+dir.create(path = rootFolder,
+           showWarnings = FALSE, 
+           recursive = TRUE)
+
 saveRDS(object = cohortDefinitionSet,
         file = file.path(rootFolder, 
                          "cohortDefinitionSet.RDS"))
@@ -147,9 +151,9 @@ readr::write_excel_csv(
   append = FALSE
 )
 
-# PrivateScripts::executeCohortGenerationInParallel(
-#   cdmSources = cdmSources,
-#   outputFolder = file.path(rootFolder, "CohortGenerator"),
-#   cohortDefinitionSet = cohortDefinitionSet,
-#   cohortTableNames = CohortGenerator::getCohortTableNames(cohortTable = projectCode)
-# )
+PrivateScripts::executeCohortGenerationInParallel(
+  cdmSources = cdmSources,
+  outputFolder = file.path(rootFolder, "CohortGenerator"),
+  cohortDefinitionSet = cohortDefinitionSet,
+  cohortTableNames = CohortGenerator::getCohortTableNames(cohortTable = projectCode)
+)
