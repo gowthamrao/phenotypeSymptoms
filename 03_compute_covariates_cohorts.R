@@ -4,13 +4,6 @@ source(file.path(filePath, "01_selected_phenotypes.R"))
 source(file.path(filePath, "02_generate_cohorts.R"))
 
 
-
-targetCohortTableName <- projectCode
-temporalStartDays <- c(0,-7,-7, 0,-30)
-temporalEndDays <- c(0, 7, 0, 7, 30)
-unionCovariateCohorts <- TRUE
-
-
 ## loop over
 primaryCohortIds <- cohortDefinitionSet |>
   dplyr::pull(subsetParent) |>
@@ -33,19 +26,7 @@ for (i in (1:length(primaryCohortIds))) {
              recursive = TRUE)
   PrivateScripts::executeCohortCovariateCharacterizationInParallel(
     cdmSources = cdmSources,
-    databaseIds = c(
-      "truven_ccae",
-      "truven_mdcd",
-      "cprd" ,
-      "jmdc",
-      "optum_extended_dod",
-      "optum_ehr",
-      "truven_mdcr",
-      "ims_australia_lpd",
-      "ims_germany",
-      "ims_france" ,
-      "iqvia_pharmetrics_plus"
-    ),
+    databaseIds = databaseIds,
     targetCohortIds = targetCohortIds,
     covariateCohortIds = covariateCohortIds,
     unionCovariateCohorts = unionCovariateCohorts,
