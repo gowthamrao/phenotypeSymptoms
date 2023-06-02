@@ -17,7 +17,8 @@ strepThoat <- dplyr::tibble(
 otitisMedia <- dplyr::tibble(
   label = 'otitis media',
   targetCohortIds = 372,
-  featureCohortIds = c(12, 9, 64, 327, 368, 354, 278, 369, 3, 20, 367, 391, 6, 353, 355, 352)
+  featureCohortIds = c(12, 9, 64, 327, 368, 354, 278, 3, 20, 367, 391, 6, 353, 355, 352),
+  notes = "removed 369 because not a symptom"
 )
 
 cardiacFailure <- dplyr::tibble(
@@ -35,7 +36,8 @@ hepaticFailure <- dplyr::tibble(
 epistaxis <- dplyr::tibble(
   label = 'Epistaxis',
   targetCohortIds = 356,
-  featureCohortIds = c(12, 324, 354, 278, 369, 64, 368, 5, 7, 332, 9, 280, 11, 391, 3, 191, 392, 10)
+  featureCohortIds = c(12, 324, 354, 278, 64, 368, 5, 7, 332, 9, 280, 11, 391, 3, 191, 392, 10),
+  notes = 'removed 369 because allergic condition is not a symptom'
 )
 
 acuteKidneyInjury <- dplyr::tibble(
@@ -47,8 +49,11 @@ acuteKidneyInjury <- dplyr::tibble(
 angioedema <- dplyr::tibble(
   label = 'Angioedema',
   targetCohortIds = 220,
-  featureCohortIds = c(369, 340, 241, 12,354, 324, 64, 278, 5, 280, 332, 3, 7, 9, 11, 193, 353, 368, 381, 191, 
-                       38, 392)
+  featureCohortIds = c(340, 12,354, 324, 64, 278, 5, 280, 332, 3, 7, 9, 11, 193, 353, 368, 381, 191, 
+                       38, 392, 415, 416, 414),
+  notes = "removed 241 urticaria because angioedema and urticaria has a pre-cordinated code called Angioedema and/or urticaria,
+  added 415 erythema, 416, 414,
+  removed 369 as part of the entry event for Angioedema"
 )
 
 allergicRhinitis <- dplyr::tibble(
@@ -63,16 +68,16 @@ dysmenorrhea <- dplyr::tibble(
   featureCohortIds = c(278, 280, 300, 64, 11, 279, 7, 191, 10)
 )
 
-# acuteUti <- dplyr::tibble(
-#   label = 'Acute Urinary Tract Infection',
-#   targetCohortIds = 410,
-#   featureCohortIds = c()
-# )
-# 
+acuteUti <- dplyr::tibble(
+  label = 'Acute Urinary Tract Infection',
+  targetCohortIds = 410,
+  featureCohortIds = c(6, 64, 365, 278, 280, 281, 241, 348, 191, 339)
+)
+
 # sepsisOrSepticShock <- dplyr::tibble(
 #   label = 'Sepsis or Septic Shock',
 #   targetCohortIds = 411,
-#   featureCohortIds = c()
+#   featureCohortIds = c(278, 324, )
 # )
 
 hemorrhoids <- dplyr::tibble(
@@ -87,17 +92,19 @@ atypicalPneumonia <- dplyr::tibble(
   featureCohortIds = c(64, 5, 324,3, 278, 20, 359, 358, 6, 11, 191, 403, 332, 12, 10, 57, 9, 331, 339, 368)
 )
 
-
 asthmaOrCopd <- dplyr::tibble(
   label = 'asthma or copd',
   targetCohortIds = 26,
-  featureCohortIds = c(64, 324, 278, 369, 12, 20, 5, 3, 354, 332, 368, 11, 191, 9)
+  featureCohortIds = c(64, 324, 278,  12, 5, 3, 354, 332, 368, 11, 191, 9),
+  notes = "removed 20 because bronchitis is parent of emphysematous bronchitis an entry event criteria for bronchitis
+  removed 369 because not a symptom"
 )
 
 asthma <- dplyr::tibble(
   label = 'asthma',
   targetCohortIds = 27,
-  featureCohortIds = c(369, 12, 64, 324, 354, 278, 20, 3, 5, 368, 9, 392, 11, 7,191, 327, 328, 6)
+  featureCohortIds = c(12, 64, 324, 354, 278, 20, 3, 5, 368, 9, 392, 11, 7,191, 327, 328, 6),
+  notes = "removed 369 because part of asthma definition entry event criteria"
 )
 
 tuberculosis <- dplyr::tibble(
@@ -120,7 +127,7 @@ febrileSeizure <- dplyr::tibble(
 
 transverseMyelitis <- dplyr::tibble(
   label = 'transverse myelitis',
-  targetCohortIds = 63,
+  targetCohortIds = 412,
   featureCohortIds = c(324, 64, 232, 11,191, 280, 7, 364, 5, 12, 244, 342) 
 )
 
@@ -139,7 +146,8 @@ acuteIschemicStroke <- dplyr::tibble(
 acuteMyocardialInfarction <- dplyr::tibble(
   label = 'acute myocardial infarction',
   targetCohortIds = 70,
-  featureCohortIds = c(324, 64, 5, 359, 11, 191, 339, 10, 341, 57, 244, 62) 
+  featureCohortIds = c(324, 64, 5, 359, 11, 191, 339, 10, 341, 244, 62) ,
+  notes = "removed 57 Bleeding because cerebral hemorrhage is part of bleeding"
 )
 
 influenzaDiagnosis <- dplyr::tibble(
@@ -157,7 +165,8 @@ hemorrhagicStroke <- dplyr::tibble(
 appendicitis <- dplyr::tibble(
   label = 'appendicitis',
   targetCohortIds = 234,
-  featureCohortIds = c(280, 324, 10, 64, 299, 4, 6, 189, 1911, 281)
+  featureCohortIds = c(280, 324, 10, 64, 4, 6, 189, 1911, 281, 417),
+  notes = "replaced with 417 because had appendix perforation"
 )
 
 opticNeuritis <- dplyr::tibble(
@@ -208,7 +217,7 @@ cohortsToStudy <- dplyr::bind_rows(
   angioedema,
   allergicRhinitis,
   dysmenorrhea,
-  # acuteUti,
+  acuteUti,
   # sepsisOrSepticShock,
   hemorrhoids,
   atypicalPneumonia,
