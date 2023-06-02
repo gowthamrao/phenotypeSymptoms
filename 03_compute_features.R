@@ -27,12 +27,25 @@ for (i in (1:length(primaryCohortIds))) {
   covariateCohortDefinitionSet <-
     PhenotypeLibrary::getPhenotypeLog()
   outputFolderByCohortId = file.path(rootFolder, "CohortCovariates", primaryCohortId)
-  
+  unlink(outputFolderByCohortId, recursive = TRUE, force = TRUE)
   dir.create(path = outputFolderByCohortId,
              showWarnings = FALSE,
              recursive = TRUE)
   PrivateScripts::executeCohortCovariateCharacterizationInParallel(
     cdmSources = cdmSources,
+    databaseIds = c(
+      "truven_ccae",
+      "truven_mdcd",
+      "cprd" ,
+      "jmdc",
+      "optum_extended_dod",
+      "optum_ehr",
+      "truven_mdcr",
+      "ims_australia_lpd",
+      "ims_germany",
+      "ims_france" ,
+      "iqvia_pharmetrics_plus"
+    ),
     targetCohortIds = targetCohortIds,
     covariateCohortIds = covariateCohortIds,
     unionCovariateCohorts = unionCovariateCohorts,
