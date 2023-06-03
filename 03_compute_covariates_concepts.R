@@ -5,7 +5,7 @@ source(file.path(filePath, "02_generate_cohorts.R"))
 
 
 
-outputFolder = file.path(rootFolder, "ConceptCovariates")
+outputFolder = file.path(rootFolder, "CovariateConcepts")
 unlink(outputFolder, recursive = TRUE, force = TRUE)
 dir.create(path = outputFolder,
            showWarnings = FALSE,
