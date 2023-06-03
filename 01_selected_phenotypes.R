@@ -155,15 +155,15 @@ acutePancreatitis <- dplyr::tibble(
 acuteIschemicHemorrhagicStroke <- dplyr::tibble(
   label = 'acute ischemic  or hemorrhagic stroke',
   targetCohortIds = 70,
-  featureCohortIds = c(11, 194, 191, 5, 57, 341, 7, 244, 359, 150, 331, 364, 10, 232, 339) ,
+  featureCohortIds = c(11, 194, 191, 5, 341, 7, 244, 359, 150, 331, 364, 10, 232, 339) ,
   notes = "removed 64, removed 57 because overlaps with hemorrhages"
 )
 
 acuteMyocardialInfarction <- dplyr::tibble(
   label = 'acute myocardial infarction',
-  targetCohortIds = 70,
-  featureCohortIds = c(5, 359, 11, 191, 339, 10, 341, 244, 62) ,
-  notes = "removed 57 Bleeding because cerebral hemorrhage is part of bleeding, removed 64"
+  targetCohortIds = 71,
+  featureCohortIds = c(405, 404, 402, 359, 339, 335, 278, 275, 274, 273, 244, 219, 95, 57, 5, 359, 11, 191, 339, 10, 341, 244, 62) ,
+  notes = ""
 )
 
 influenzaDiagnosis <- dplyr::tibble(

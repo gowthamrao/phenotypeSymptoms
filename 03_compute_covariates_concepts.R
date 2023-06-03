@@ -24,6 +24,7 @@ temporalCovariateSettings <-
     useDemographicsPostObservationTime = TRUE,
     useDemographicsPriorObservationTime = TRUE,
     useDemographicsIndexMonth = TRUE,
+    useObservation = TRUE,
     temporalStartDays = temporalStartDays,
     temporalEndDays = temporalEndDays
   )
