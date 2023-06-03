@@ -2,9 +2,16 @@ filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
 source(file.path(filePath, "00_common.R"))
 source(file.path(filePath, "01_selected_phenotypes.R"))
 
+outputFolder <- file.path(rootFolder,
+                          "resolvedConcepts")
+unlink(x = outputFolder,
+       recursive = TRUE,
+       force = TRUE)
+dir.create(path = outputFolder,
+           showWarnings = FALSE)
+
 cohortIds <- c(cohortsToStudy$targetCohortIds,
                cohortsToStudy$featureCohortIds) |> unique()
-
 
 cohortsToResolve <-
   PhenotypeLibrary::getPlCohortDefinitionSet(cohortIds = cohortIds) |> 
@@ -12,17 +19,26 @@ cohortsToResolve <-
 
 conceptSets <-
   ConceptSetDiagnostics::extractConceptSetsInCohortDefinitionSet(cohortDefinitionSet = cohortsToResolve)
+saveRDS(object = conceptSets,
+        file = file.path(outputFolder,
+                         "conceptSets.RDS"))
 
+#############
+
+conceptSets <- readRDS(file = file.path(outputFolder,
+                                        "conceptSets.RDS"))
 uniqueConceptSets <- conceptSets |>
   dplyr::select(uniqueConceptSetId,
                 conceptSetExpression)
 
+#create connection
 connectionDetails <-
   PrivateScripts::createConnectionDetails(cdmSources = cdmSources)
 cdmSource <- PrivateScripts::getCdmSource(cdmSources = cdmSources)
 connection <-
   DatabaseConnector::connect(connectionDetails = connectionDetails)
 
+# loop thru concept set and resolve them
 resolvedConceptSet <- list()
 for (i in (1:nrow(uniqueConceptSets))) {
   resolvedConceptSet[[i]] <-
@@ -38,6 +54,15 @@ for (i in (1:nrow(uniqueConceptSets))) {
 }
 
 resolvedConceptSet <- dplyr::bind_rows(resolvedConceptSet)
+
+saveRDS(object = resolvedConceptSet,
+        file = file.path(outputFolder,
+                         "resolvedConceptSet.RDS"))
+
+
+#########
+conceptSets <- readRDS(file = file.path(outputFolder,
+                                        "conceptSets.RDS"))
 
 resolvedConceptToCohortXWalk <- resolvedConceptSet |> 
   dplyr::select(conceptId,
@@ -169,6 +194,17 @@ conceptPrevalenceCount <-
 
 presentInBoth <- presentInBoth |> 
   dplyr::left_join(conceptPrevalenceCount)
+
+saveRDS(object = presentInBoth,
+        file = file.path(outputFolder,
+                         "presentInBoth.RDS"))
+readr::write_excel_csv(
+  x = presentInBoth,
+  file = "presentInBoth.csv",
+  na = "",
+  append = FALSE
+)
+
 
 View(presentInBoth |> 
        dplyr::filter(drc > 100))

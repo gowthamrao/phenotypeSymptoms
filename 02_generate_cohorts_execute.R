@@ -4,3 +4,4 @@ PrivateScripts::executeCohortGenerationInParallel(
   cohortDefinitionSet = cohortDefinitionSet,
   cohortTableNames = CohortGenerator::getCohortTableNames(cohortTable = projectCode)
 )
+

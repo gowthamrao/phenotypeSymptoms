@@ -19,7 +19,7 @@ for (i in (1:length(primaryCohortIds))) {
     unique()
   covariateCohortDefinitionSet <-
     PhenotypeLibrary::getPhenotypeLog()
-  outputFolderByCohortId = file.path(rootFolder, "CohortCovariates", primaryCohortId)
+  outputFolderByCohortId = file.path(rootFolder, "CovariateCohorts", primaryCohortId)
   unlink(outputFolderByCohortId, recursive = TRUE, force = TRUE)
   dir.create(path = outputFolderByCohortId,
              showWarnings = FALSE,

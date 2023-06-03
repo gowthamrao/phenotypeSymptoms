@@ -5,7 +5,7 @@ source(file.path(filePath, "02_generate_cohorts.R"))
 
 
 
-outputFolder = file.path(rootFolder, "ObsConceptCovariates")
+outputFolder = file.path(rootFolder, "ConceptCovariates")
 unlink(outputFolder, recursive = TRUE, force = TRUE)
 dir.create(path = outputFolder,
            showWarnings = FALSE,
@@ -13,7 +13,17 @@ dir.create(path = outputFolder,
 
 temporalCovariateSettings <-
   FeatureExtraction::createTemporalCovariateSettings(
-    useObservation = TRUE,
+    useConditionEraGroupOverlap = TRUE,
+    useConditionEraStart = TRUE, 
+    useConditionEraOverlap = TRUE,
+    useDemographicsAge = TRUE,
+    useDemographicsAgeGroup = TRUE,
+    useDemographicsGender = TRUE,
+    useDemographicsIndexYear = TRUE,
+    useDemographicsIndexYearMonth = TRUE,
+    useDemographicsPostObservationTime = TRUE,
+    useDemographicsPriorObservationTime = TRUE,
+    useDemographicsIndexMonth = TRUE,
     temporalStartDays = temporalStartDays,
     temporalEndDays = temporalEndDays
   )

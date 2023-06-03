@@ -1,11 +1,11 @@
-filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
-source(file.path(filePath, "00_common.R"))
-source(file.path(filePath, "01_selected_phenotypes.R"))
-source(file.path(filePath, "02_generate_cohorts.R"))
-
+# filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
+# source(file.path(filePath, "00_common.R"))
+# source(file.path(filePath, "01_selected_phenotypes.R"))
+# source(file.path(filePath, "02_generate_cohorts.R"))
+# 
 fileNames <- dplyr::tibble(
   folders = list.files(
-    path = "D:\\studyResults\\symptomStudy\\CohortCovariates",
+    path = "D:\\studyResults\\symptomStudy\\CovariateCohort",
     full.names = TRUE,
     include.dirs = TRUE,
     pattern = "cdm_optum_extended_dod_v2434",
@@ -15,7 +15,7 @@ fileNames <- dplyr::tibble(
   dplyr::mutate(
     primaryCohortId = stringr::str_replace(
       string = folders,
-      pattern = stringr::fixed("D:\\studyResults\\symptomStudy\\CohortCovariates/"),
+      pattern = stringr::fixed("D:\\studyResults\\symptomStudy\\CovariateCohort/"),
       replacement = ""
     )
   ) |>
@@ -29,7 +29,7 @@ fileNames <- dplyr::tibble(
   )
 
 
-i = 29
+i = 1
 analysisRef <- readRDS(file = file.path(fileNames[i,]$folders,
                                         "analysisRef.RDS"))
 covariateRef <- readRDS(file = file.path(fileNames[i,]$folders,
