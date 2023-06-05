@@ -1,7 +1,9 @@
 filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
 source(file.path(filePath, "00_common.R"))
-source(file.path(filePath, "01_selected_phenotypes.R"))
-source(file.path(filePath, "02_generate_cohorts.R"))
+cohortsToStudy <- readRDS(file = file.path(filePath,
+                                           "cohortsToStudy.RDS"))
+cohortDefinitionSet <- readRDS(file = file.path(filePath,
+                                                "cohortDefinitionSet.RDS"))
 
 
 ## loop over
@@ -38,49 +40,3 @@ for (i in (1:length(primaryCohortIds))) {
     outputFolder = outputFolderByCohortId
   )
 }
-
-
-
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# featureExtractionOutput$covariates |>
-#   dplyr::inner_join(featureExtractionOutput$timeRef) |>
-#   dplyr::inner_join(featureExtractionOutput$covariateRef) |>
-#   dplyr::inner_join(featureExtractionOutput$analysisRef) |>
-#   dplyr::mutate(covariateCohortCohortId = (covariateId - analysisId) / 1000) |>
-#   dplyr::filter(cohortId == cohortId) |>
-#   dplyr::select(
-#     cohortId,
-#     startDay,
-#     endDay,
-#     covariateCohortCohortId,
-#     conceptId,
-#     analysisId,
-#     covariateId,
-#     cohortId,
-#     covariateName,
-#     analysisName,
-#     domainId,
-#     mean,
-#     sumValue
-#   ) |>
-#   dplyr::filter(mean > 0.01) |>
-#   dplyr::mutate(mean = round(x = mean, digits = 2)) |>
-#   # dplyr::filter(analysisName == 'ConditionEraGroupOverlap') |>
-#   dplyr::filter(startDay == 0) |>
-#   dplyr::collect() |>
-#   dplyr::arrange(dplyr::desc(mean)) |>
-#   dplyr::filter(
-#     covariateCohortCohortId %in% c(
-#       cohortsToStudy |>
-#         dplyr::filter(targetCohortIds == (cohortId - 1) / 1000) |>
-#         dplyr::pull(featureCohortIds) |>
-#         unique()
-#     )
-#   ) |>
-#   View()

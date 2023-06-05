@@ -1,6 +1,7 @@
 filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
 source(file.path(filePath, "00_common.R"))
-source(file.path(filePath, "01_selected_phenotypes.R"))
+readRDS(file = file.path(filePath,
+                         "cohortsToStudy.RDS"))
 
 ##########
 firstEverWith365DaysPriorObservation <-
@@ -135,20 +136,14 @@ cohortDefinitionSet <-
   CohortGenerator::addCohortSubsetDefinition(cohortSubsetDefintion = startBeforeCalendarYear2016Female) |>
   CohortGenerator::addCohortSubsetDefinition(cohortSubsetDefintion = startAfterCalendarYear2016Female)
 
-dir.create(path = rootFolder,
-           showWarnings = FALSE, 
-           recursive = TRUE)
-
 saveRDS(object = cohortDefinitionSet,
-        file = file.path(rootFolder, 
+        file = file.path(filePath,
                          "cohortDefinitionSet.RDS"))
 
 readr::write_excel_csv(
   x = cohortDefinitionSet,
-  file = file.path(rootFolder,
+  file = file.path(filePath,
                    "cohortDefinitionSet.csv"),
   na = "",
   append = FALSE
 )
-
-

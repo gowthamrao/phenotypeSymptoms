@@ -276,3 +276,8 @@ cohortsToStudy <- dplyr::bind_rows(
   dplyr::distinct() |> 
   dplyr::arrange(targetCohortIds,
                  featureCohortIds)
+
+
+saveRDS(object = cohortsToStudy,
+        file = file.path(filePath,
+                         "cohortsToStudy.RDS"))

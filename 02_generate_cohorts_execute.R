@@ -1,5 +1,9 @@
 filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
-source(file.path(filePath, "02_generate_cohorts.R"))
+source(file.path(filePath, "00_common.R"))
+cohortsToStudy <- readRDS(file = file.path(filePath,
+                                           "cohortsToStudy.RDS"))
+cohortDefinitionSet <- readRDS(file = file.path(filePath,
+                                                "cohortDefinitionSet.RDS"))
 
 PrivateScripts::executeCohortGenerationInParallel(
   cdmSources = cdmSources,

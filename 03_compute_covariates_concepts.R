@@ -1,7 +1,9 @@
 filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
 source(file.path(filePath, "00_common.R"))
-source(file.path(filePath, "01_selected_phenotypes.R"))
-source(file.path(filePath, "02_generate_cohorts.R"))
+cohortsToStudy <- readRDS(file = file.path(filePath,
+                                           "cohortsToStudy.RDS"))
+cohortDefinitionSet <- readRDS(file = file.path(filePath,
+                                                "cohortDefinitionSet.RDS"))
 
 
 

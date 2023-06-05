@@ -1,9 +1,12 @@
 filePath <- dirname(rstudioapi::getActiveDocumentContext()$path)
 source(file.path(filePath, "00_common.R"))
-source(file.path(filePath, "01_selected_phenotypes.R"))
+cohortsToStudy <- readRDS(file = file.path(filePath,
+                                           "cohortsToStudy.RDS"))
+cohortDefinitionSet <- readRDS(file = file.path(filePath,
+                                                "cohortDefinitionSet.RDS"))
 
 outputFolder <- file.path(rootFolder,
-                          "resolvedConcepts")
+                          "ConceptsResolved")
 unlink(x = outputFolder,
        recursive = TRUE,
        force = TRUE)
