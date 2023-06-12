@@ -9,7 +9,9 @@ cohortDefinitionSet <- readRDS(file = file.path(filePath,
 ## loop over
 primaryCohortIds <- cohortDefinitionSet |>
   dplyr::pull(subsetParent) |>
+  sort() |> 
   unique()
+
 for (i in (1:length(primaryCohortIds))) {
   primaryCohortId <- primaryCohortIds[[i]]
   targetCohortIds <- cohortDefinitionSet |>
