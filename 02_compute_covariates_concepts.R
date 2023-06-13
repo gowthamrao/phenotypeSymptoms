@@ -16,7 +16,7 @@ dir.create(path = outputFolder,
 temporalCovariateSettings <-
   FeatureExtraction::createTemporalCovariateSettings(
     useConditionEraGroupOverlap = TRUE,
-    useConditionEraStart = TRUE, 
+    useConditionEraStart = TRUE,
     useConditionEraOverlap = TRUE,
     useDemographicsAge = TRUE,
     useDemographicsAgeGroup = TRUE,
@@ -27,6 +27,19 @@ temporalCovariateSettings <-
     useDemographicsPriorObservationTime = TRUE,
     useDemographicsIndexMonth = TRUE,
     useObservation = TRUE,
+    useVisitCount = TRUE,
+    useVisitConceptCount = TRUE,
+    useCareSiteId = TRUE,
+    useConditionOccurrencePrimaryInpatient = TRUE,
+    useConditionOccurrence = TRUE,
+    useDrugEraStart = TRUE,
+    useDrugEraOverlap = TRUE,
+    useDistinctConditionCount = TRUE,
+    useDistinctIngredientCount = TRUE,
+    useDrugEraGroupOverlap = TRUE,
+    useDrugEraGroupStart = TRUE,
+    useProcedureOccurrence = TRUE,
+    useMeasurement = TRUE,
     temporalStartDays = temporalStartDays,
     temporalEndDays = temporalEndDays
   )

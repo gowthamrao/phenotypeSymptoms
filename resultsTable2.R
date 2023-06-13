@@ -112,19 +112,19 @@ featureExtractionOutputCompositeOuter <- c()
 for (i in (1:length(targetCohortIds))) {
   targetCohortId <- targetCohortIds[[i]]
   print(targetCohortId)
+  featureExtractionOutputCompositeInner <- c()
   for (j in (1:nrow(databaseInformation))) {
-    databaseId <- databaseInformation[j, ]$databaseId
+    databaseId <- databaseInformation[j,]$databaseId
     pathToRds <- file.path(rootFolder,
                            "CovariateConcepts",
                            databaseId,
                            "FeatureExtraction.RDS")
     
-    featureExtractionOutputCompositeInner <- c()
     if (file.exists(pathToRds)) {
       print(paste0("    ---", databaseId))
       featureExtractionData <- readRDS(file = pathToRds)
       
-      featureExtractionOutputCompositeInner[[i]] <-
+      featureExtractionOutputCompositeInner[[j]] <-
         PrivateScripts::createFeatureExtractionReport(
           cohortId = targetCohortId,
           cohortDefinitionSet = cohortDefinitionSet,
@@ -168,9 +168,14 @@ for (i in (1:length(targetCohortIds))) {
         dplyr::distinct()
       
       
-      featureExtractionOutputCompositeInner[[i]] <-
-        featureExtractionOutputCompositeInner[[i]] |>
-        dplyr::filter(!conceptId %in% c(conceptIdsRelatedToConceptIdsInEntryEventCriteria)) |>
+      featureExtractionOutputCompositeInner[[j]] <-
+        featureExtractionOutputCompositeInner[[j]] |>
+        dplyr::filter(!conceptId %in% c(
+          c(
+            conceptIdsRelatedToConceptIdsInEntryEventCriteria$conceptId,
+            conceptIdsInEntryEventCriteria$conceptId
+          ) |> unique()
+        )) |>
         dplyr::select(cohortId,
                       covariateName,
                       domainId,
@@ -185,13 +190,41 @@ for (i in (1:length(targetCohortIds))) {
     dplyr::bind_rows()
 }
 
+dir.create(path = file.path(rootFolder,
+                            "CovariateConcepts",
+                            "Combined"))
+
+featureExtractionOutputCompositeOuter <- featureExtractionOutputCompositeOuter |> 
+  dplyr::bind_rows()
+
 saveRDS(
   object = featureExtractionOutputCompositeOuter,
   file = file.path(
-    resultsFolder,
-    "ConceptsResolved",
-    "featureExtractionOutputNotInEntryEvent.RDS"
+    rootFolder,
+    "CovariateConcepts",
+    "Combined",
+    "notInEntryEvent.RDS"
   )
 )
 
-View(featureExtractionOutputCompositeOuter)
+targetCohortIds
+View(
+  featureExtractionOutputCompositeOuter |>
+    dplyr::filter(cohortId == 68) |>
+    dplyr::inner_join(cohortDefinitionSet |>
+                        dplyr::select(cohortId,
+                                      cohortName)) |>
+    dplyr::relocate(cohortName) |>
+    dplyr::select(cohortName,
+                  covariateName,
+                  analysisName,
+                  mean,
+                  databaseId) |>
+    tidyr::pivot_wider(
+      id_cols = c(cohortName,
+                  covariateName,
+                  analysisName),
+      names_from = databaseId,
+      values_from = mean
+    )
+)
