@@ -7,6 +7,15 @@ dir.create(path = resultsFolder,
            showWarnings = FALSE,
            recursive = TRUE)
 
+meanThreshold <-  0.01
+startDays <- c(0)
+endDays <- c(0)
+
+#connection
+cdmSource <- PrivateScripts::getCdmSource(cdmSources = cdmSources)
+connectionDetails <-
+  PrivateScripts::createConnectionDetails(cdmSources = cdmSources)
+
 #Information on datasources-----
 databaseInformation <- cdmSources |>
   dplyr::filter(
@@ -33,6 +42,24 @@ conceptSets <- readRDS(file = file.path(rootFolder,
 resolvedConceptSet <- readRDS(file = file.path(rootFolder,
                                                "ConceptsResolved",
                                                "resolvedConceptSet.RDS"))
+
+conceptAncestor <-
+  ConceptSetDiagnostics::getConceptAncestor(
+    conceptIds = resolvedConceptSet$conceptId |> unique(),
+    connectionDetails = connectionDetails,
+    vocabularyDatabaseSchema = cdmSource$vocabDatabaseSchemaRhealth
+  )
+conceptDescendant <-
+  ConceptSetDiagnostics::getConceptDescendant(
+    conceptIds = resolvedConceptSet$conceptId |> unique(),
+    connectionDetails = connectionDetails,
+    vocabularyDatabaseSchema = cdmSource$vocabDatabaseSchemaRhealth
+  )
+conceptsRelatedInHierarchy <- dplyr::bind_rows(conceptAncestor,
+                                               conceptDescendant) |>
+  dplyr::select(ancestorConceptId,
+                descendantConceptId) |>
+  dplyr::collect()
 
 targetFeatureCohortReference <- readRDS(file = file.path(filePath,
                                                          "cohortsToStudy.RDS")) |>
@@ -79,43 +106,71 @@ targetCohortIds <- setdiff(x = targetCohortIds,
 
 
 # cohorts ----
-featureExtractionOutputComposite <- c()
+
+featureExtractionOutputCompositeOuter <- c()
+
 for (i in (1:length(targetCohortIds))) {
   targetCohortId <- targetCohortIds[[i]]
-  for (j in (1:length(databaseInformation))) {
+  print(targetCohortId)
+  for (j in (1:nrow(databaseInformation))) {
     databaseId <- databaseInformation[j, ]$databaseId
     pathToRds <- file.path(rootFolder,
                            "CovariateConcepts",
                            databaseId,
                            "FeatureExtraction.RDS")
+    
+    featureExtractionOutputCompositeInner <- c()
     if (file.exists(pathToRds)) {
+      print(paste0("    ---", databaseId))
       featureExtractionData <- readRDS(file = pathToRds)
       
-      featureExtractionOutputComposite[[i]] <-
+      featureExtractionOutputCompositeInner[[i]] <-
         PrivateScripts::createFeatureExtractionReport(
-          cohortId = 27,
+          cohortId = targetCohortId,
           cohortDefinitionSet = cohortDefinitionSet,
           characterization = featureExtractionData,
-          meanThreshold = 0.01,
-          startDays = c(0),
-          endDays = c(0)
-        ) |>
-        dplyr::anti_join(
-          resolvedConceptSet |>
-            dplyr::inner_join(
-              conceptSets |>
-                dplyr::filter(
-                  conceptSetUsedInEntryEvent == 1,
-                  cohortId == !!targetCohortId
-                ) |>
-                dplyr::select(uniqueConceptSetId) |>
-                dplyr::distinct(),
-              by = "uniqueConceptSetId"
+          meanThreshold = meanThreshold,
+          startDays = startDays,
+          endDays = endDays
+        )
+      
+      conceptIdsInEntryEventCriteria <-
+        resolvedConceptSet |>
+        dplyr::inner_join(
+          conceptSets |>
+            dplyr::filter(
+              conceptSetUsedInEntryEvent == 1,
+              cohortId == !!targetCohortId
             ) |>
-            dplyr::select(conceptId) |>
+            dplyr::select(uniqueConceptSetId) |>
             dplyr::distinct(),
-          by = "conceptId"
+          by = "uniqueConceptSetId"
         ) |>
+        dplyr::select(conceptId) |>
+        dplyr::distinct()
+      
+      conceptIdsRelatedToConceptIdsInEntryEventCriteria <-
+        dplyr::bind_rows(
+          conceptsRelatedInHierarchy |>
+            dplyr::filter(
+              descendantConceptId %in% c(conceptIdsInEntryEventCriteria$conceptId |> unique())
+            ) |>
+            dplyr::select(ancestorConceptId) |>
+            dplyr::rename(conceptId = ancestorConceptId),
+          
+          conceptsRelatedInHierarchy |>
+            dplyr::filter(
+              ancestorConceptId %in% c(conceptIdsInEntryEventCriteria$conceptId |> unique())
+            ) |>
+            dplyr::select(descendantConceptId) |>
+            dplyr::rename(conceptId = descendantConceptId)
+        ) |>
+        dplyr::distinct()
+      
+      
+      featureExtractionOutputCompositeInner[[i]] <-
+        featureExtractionOutputCompositeInner[[i]] |>
+        dplyr::filter(!conceptId %in% c(conceptIdsRelatedToConceptIdsInEntryEventCriteria)) |>
         dplyr::select(cohortId,
                       covariateName,
                       domainId,
@@ -125,4 +180,18 @@ for (i in (1:length(targetCohortIds))) {
         dplyr::mutate(databaseId = !!databaseId)
     }
   }
+  featureExtractionOutputCompositeOuter[[i]] <-
+    featureExtractionOutputCompositeInner |>
+    dplyr::bind_rows()
 }
+
+saveRDS(
+  object = featureExtractionOutputCompositeOuter,
+  file = file.path(
+    resultsFolder,
+    "ConceptsResolved",
+    "featureExtractionOutputNotInEntryEvent.RDS"
+  )
+)
+
+View(featureExtractionOutputCompositeOuter)
