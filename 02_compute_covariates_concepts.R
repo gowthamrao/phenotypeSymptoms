@@ -8,7 +8,7 @@ cohortDefinitionSet <- readRDS(file = file.path(filePath,
 
 
 outputFolder = file.path(rootFolder, "CovariateConcepts")
-unlink(outputFolder, recursive = TRUE, force = TRUE)
+# unlink(outputFolder, recursive = TRUE, force = TRUE)
 dir.create(path = outputFolder,
            showWarnings = FALSE,
            recursive = TRUE)
